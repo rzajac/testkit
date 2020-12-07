@@ -3,6 +3,8 @@ package testkit
 import (
 	"bytes"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -52,4 +54,18 @@ func Test_ErrReader_CustomError(t *testing.T) {
 	assert.ErrorIs(t, err, ce)
 	assert.Exactly(t, 3, n)
 	assert.Exactly(t, []byte{0, 1, 2}, dst)
+}
+
+func ExampleErrReader() {
+	r := bytes.NewReader([]byte{0, 1, 2, 3})
+	er := ErrReader(r, 2, nil)
+
+	got, err := ioutil.ReadAll(er)
+
+	fmt.Println(got)
+	fmt.Println(err)
+
+	// Output:
+	// [0 1]
+	// testkit test error
 }

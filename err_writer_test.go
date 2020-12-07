@@ -3,6 +3,7 @@ package testkit
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -49,4 +50,20 @@ func Test_ErrWriter_CustomError(t *testing.T) {
 	assert.ErrorIs(t, err, ce)
 	assert.Exactly(t, 3, n)
 	assert.Exactly(t, []byte{0, 1, 2}, dst.Bytes())
+}
+
+func ExampleErrWriter() {
+	dst := &bytes.Buffer{}
+	ew := ErrWriter(dst, 3, errors.New("my error"))
+
+	n, err := ew.Write([]byte{0, 1, 2})
+
+	fmt.Println(n)
+	fmt.Println(err)
+	fmt.Println(dst.Bytes())
+
+	// Output:
+	// 3
+	// my error
+	// [0 1 2]
 }
