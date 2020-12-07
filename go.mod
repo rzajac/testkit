@@ -1,4 +1,4 @@
-module testkit
+module github.com/rzajac/testkit
 
 go 1.15
 
