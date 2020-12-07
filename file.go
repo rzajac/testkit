@@ -37,11 +37,7 @@ func TempFile(t T, dir, pattern string) *os.File {
 		t.Fatal(err)
 	}
 	name := fil.Name()
-	t.Cleanup(func() {
-		if err := os.Remove(name); err != nil {
-			t.Fatal(err)
-		}
-	})
+	t.Cleanup(func() { _ = os.Remove(name) })
 	return fil
 }
 
