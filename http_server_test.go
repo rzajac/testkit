@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	kit "testkit"
-	"testkit/internal"
+	kit "github.com/rzajac/testkit"
+	"github.com/rzajac/testkit/internal"
 )
 
 func Test_HTTPServer_SmokeTest(t *testing.T) {

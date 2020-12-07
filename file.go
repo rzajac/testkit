@@ -28,13 +28,19 @@ func CreateFile(t T, name string) *os.File {
 }
 
 // TempFile is a wrapper around ioutil.TempFile() which calls t.Fatal()
-// on error.
+// on error. It registers cleanup function with t removing the
+// created file.
 func TempFile(t T, dir, pattern string) *os.File {
 	t.Helper()
 	fil, err := ioutil.TempFile(dir, pattern)
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(func() {
+		if err := os.Remove(fil.Name()); err != nil {
+			t.Fatal(err)
+		}
+	})
 	return fil
 }
 
