@@ -10,6 +10,7 @@ func AbsPath(t T, pth string) string {
 	pth, err := filepath.Abs(pth)
 	if err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	return pth
 }

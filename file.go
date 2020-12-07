@@ -13,6 +13,7 @@ func OpenFile(t T, name string) *os.File {
 	fil, err := os.Open(name)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return fil
 }
@@ -23,6 +24,7 @@ func CreateFile(t T, name string) *os.File {
 	fil, err := os.Create(name)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return fil
 }
@@ -35,6 +37,7 @@ func TempFile(t T, dir, pattern string) *os.File {
 	fil, err := ioutil.TempFile(dir, pattern)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	name := fil.Name()
 	t.Cleanup(func() { _ = os.Remove(name) })
@@ -48,6 +51,7 @@ func ReadFile(t T, filename string) []byte {
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return buf
 }
@@ -58,6 +62,7 @@ func FileSize(t T, fil *os.File) int64 {
 	s, err := fil.Stat()
 	if err != nil {
 		t.Fatal(err)
+		return 0
 	}
 	return s.Size()
 }
@@ -71,6 +76,7 @@ func ReplaceAllInFile(t T, filename, old, new string) {
 	err := ioutil.WriteFile(filename, []byte(str), 0)
 	if err != nil {
 		t.Fatal(err)
+		return
 	}
 }
 
@@ -81,6 +87,7 @@ func Readdirnames(t T, fil *os.File) []string {
 	names, err := fil.Readdirnames(0)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return names
 }
@@ -92,16 +99,19 @@ func WriteTempFile(t T, dir string, r io.Reader) string {
 	f, err := ioutil.TempFile(dir, "")
 	if err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	defer f.Close()
 	pth := f.Name()
 	t.Cleanup(func() {
 		if err := os.Remove(pth); err != nil {
 			t.Fatal(err)
+			return
 		}
 	})
 	if _, err := f.ReadFrom(r); err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	return pth
 }

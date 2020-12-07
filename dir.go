@@ -11,6 +11,7 @@ func TempDir(t T, dir string, prefix string) string {
 	pth, err := ioutil.TempDir(dir, prefix)
 	if err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	return pth
 }
@@ -25,6 +26,7 @@ func CreateDir(t T, name string) string {
 	t.Helper()
 	if err := os.Mkdir(name, 0700); err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	return name
 }

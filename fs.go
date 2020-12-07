@@ -12,6 +12,7 @@ func ModTime(t T, name string) time.Time {
 	fi, err := os.Stat(name)
 	if err != nil {
 		t.Fatal(err)
+		return time.Time{}
 	}
 	return fi.ModTime()
 }

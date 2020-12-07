@@ -12,6 +12,7 @@ func ReadAll(t T, r io.Reader) []byte {
 	bs, err := ioutil.ReadAll(r)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return bs
 }
@@ -31,10 +32,12 @@ func ReadAllFromStart(t T, rs io.ReadSeeker) []byte {
 	cur, err := rs.Seek(0, io.SeekCurrent)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 
 	if _, err := rs.Seek(0, io.SeekStart); err != nil {
 		t.Fatal(err)
+		return nil
 	}
 
 	defer func() { _, _ = rs.Seek(cur, io.SeekStart) }()
@@ -42,6 +45,7 @@ func ReadAllFromStart(t T, rs io.ReadSeeker) []byte {
 	ret := &bytes.Buffer{}
 	if _, err := ret.ReadFrom(rs); err != nil {
 		t.Fatal(err)
+		return nil
 	}
 
 	return ret.Bytes()

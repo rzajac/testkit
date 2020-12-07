@@ -36,7 +36,7 @@ func NewHTTPServer(t T) *HTTPServer {
 	}
 
 	// Cleanup after the test is done.
-	t.Cleanup(func() { tst.Close() })
+	t.Cleanup(func() { _ = tst.Close() })
 
 	// Handler for all incoming requests.
 	handler := func(w http.ResponseWriter, req *http.Request) {
@@ -49,6 +49,7 @@ func NewHTTPServer(t T) *HTTPServer {
 		tst.requests = append(tst.requests, c)
 		if _, err := w.Write(rsp.body); err != nil {
 			t.Fatal(err)
+			return
 		}
 	}
 
@@ -56,6 +57,7 @@ func NewHTTPServer(t T) *HTTPServer {
 	u, err := url.Parse(tst.srv.URL)
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	tst.host = u.Host
 	tst.scheme = u.Scheme

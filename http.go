@@ -18,9 +18,11 @@ func CloneHTTPRequest(t T, req *http.Request) *http.Request {
 		body, err := ioutil.ReadAll(io.TeeReader(req.Body, &buf))
 		if err != nil {
 			t.Fatal(err)
+			return nil
 		}
 		if err := req.Body.Close(); err != nil {
 			t.Fatal(err)
+			return nil
 		}
 		req.Body = ioutil.NopCloser(bytes.NewReader(buf.Bytes()))
 		c.Body = ioutil.NopCloser(bytes.NewReader(body))

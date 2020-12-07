@@ -10,6 +10,7 @@ func Getwd(t T) string {
 	wd, err := os.Getwd()
 	if err != nil {
 		t.Fatal(err)
+		return ""
 	}
 	return wd
 }

@@ -13,6 +13,7 @@ func ToJSON(t T, v interface{}) []byte {
 	data, err := json.MarshalIndent(v, "  ", "  ")
 	if err != nil {
 		t.Fatal(err)
+		return nil
 	}
 	return data
 }
@@ -29,6 +30,7 @@ func FromJSON(t T, data []byte, v interface{}) {
 	t.Helper()
 	if err := json.Unmarshal(data, v); err != nil {
 		t.Fatal(err)
+		return
 	}
 }
 
@@ -38,5 +40,6 @@ func FromJSONReader(t T, r io.Reader, v interface{}) {
 	t.Helper()
 	if err := json.NewDecoder(r).Decode(v); err != nil {
 		t.Fatal(err)
+		return
 	}
 }
