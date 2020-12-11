@@ -15,6 +15,7 @@ func OpenFile(t T, name string) *os.File {
 		t.Fatal(err)
 		return nil
 	}
+	t.Cleanup(func() { _ = fil.Close() })
 	return fil
 }
 
