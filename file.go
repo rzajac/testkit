@@ -116,3 +116,22 @@ func WriteTempFile(t T, dir string, r io.Reader) string {
 	}
 	return pth
 }
+
+// CurrOffset returns the current offset of the seeker. Calls t.Fatal()
+// on error.
+func CurrOffset(t T, s io.Seeker) int64 {
+	return Seek(t, s, 0, io.SeekCurrent)
+}
+
+// Seek sets the offset for the next Read or Write to offset,
+// interpreted according to whence.
+// Seek returns the new offset relative to the start of the s.
+// Calls t.Fatal() on error.
+func Seek(t T, s io.Seeker, offset int64, whence int) int64 {
+	off, err := s.Seek(offset, whence)
+	if err != nil {
+		t.Fatal(err)
+		return 0
+	}
+	return off
+}
