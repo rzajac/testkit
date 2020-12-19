@@ -61,7 +61,7 @@ import (
 func Test_MyFunction(t *testing.T) {
 	// --- Given ---
 	content := []byte("line1\nline2\nend")
-	pth := kit.WriteTempFile(t, t.TempDir(), bytes.NewReader(content))
+	pth := kit.TempFileBuf(t, t.TempDir(), content)
 
 	// --- When ---
 
@@ -76,7 +76,7 @@ func Test_MyFunction(t *testing.T) {
 }
 ```
 
-`WriteTempFile` creates and writes to temporary file from a reader r. Returns
+`TempFileBuf` creates and writes to temporary file from a buffer. Returns
 path to created file. It registers cleanup function with t removing the created
 file. Calls t.Fatal() on error. Similarly `ReadFile` is a wrapper
 around `ioutil.ReadFile()` which calls t.Fatal() on error.

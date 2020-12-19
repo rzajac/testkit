@@ -1,6 +1,7 @@
 package testkit
 
 import (
+	"bytes"
 	"io"
 	"io/ioutil"
 	"os"
@@ -43,6 +44,37 @@ func TempFile(t T, dir, pattern string) *os.File {
 	name := fil.Name()
 	t.Cleanup(func() { _ = os.Remove(name) })
 	return fil
+}
+
+// TempFileRdr creates and writes to temporary file from reader r. Returns
+// path to created file. It registers cleanup function with t removing the
+// created file. Calls t.Fatal() on error.
+func TempFileRdr(t T, dir string, r io.Reader) string {
+	f, err := ioutil.TempFile(dir, "")
+	if err != nil {
+		t.Fatal(err)
+		return ""
+	}
+	defer f.Close()
+	pth := f.Name()
+	t.Cleanup(func() {
+		if err := os.Remove(pth); err != nil {
+			t.Fatal(err)
+			return
+		}
+	})
+	if _, err := f.ReadFrom(r); err != nil {
+		t.Fatal(err)
+		return ""
+	}
+	return pth
+}
+
+// TempFileBuf creates and writes to temporary file from buffer b. Returns
+// path to created file. It registers cleanup function with t removing the
+// created file. Calls t.Fatal() on error.
+func TempFileBuf(t T, dir string, b []byte) string {
+	return TempFileRdr(t, dir, bytes.NewReader(b))
 }
 
 // ReadFile is a wrapper around ioutil.ReadFile() which calls t.Fatal()
@@ -91,30 +123,6 @@ func Readdirnames(t T, fil *os.File) []string {
 		return nil
 	}
 	return names
-}
-
-// WriteTempFile creates and writes to temporary file from reader r. Returns
-// path to created file. It registers cleanup function with t removing the
-// created file. Calls t.Fatal() on error.
-func WriteTempFile(t T, dir string, r io.Reader) string {
-	f, err := ioutil.TempFile(dir, "")
-	if err != nil {
-		t.Fatal(err)
-		return ""
-	}
-	defer f.Close()
-	pth := f.Name()
-	t.Cleanup(func() {
-		if err := os.Remove(pth); err != nil {
-			t.Fatal(err)
-			return
-		}
-	})
-	if _, err := f.ReadFrom(r); err != nil {
-		t.Fatal(err)
-		return ""
-	}
-	return pth
 }
 
 // CurrOffset returns the current offset of the seeker. Calls t.Fatal()
