@@ -50,6 +50,7 @@ func TempFile(t T, dir, pattern string) *os.File {
 // path to created file. It registers cleanup function with t removing the
 // created file. Calls t.Fatal() on error.
 func TempFileRdr(t T, dir string, r io.Reader) string {
+	t.Helper()
 	f, err := ioutil.TempFile(dir, "")
 	if err != nil {
 		t.Fatal(err)
@@ -74,6 +75,7 @@ func TempFileRdr(t T, dir string, r io.Reader) string {
 // path to created file. It registers cleanup function with t removing the
 // created file. Calls t.Fatal() on error.
 func TempFileBuf(t T, dir string, b []byte) string {
+	t.Helper()
 	return TempFileRdr(t, dir, bytes.NewReader(b))
 }
 
@@ -128,6 +130,7 @@ func Readdirnames(t T, fil *os.File) []string {
 // CurrOffset returns the current offset of the seeker. Calls t.Fatal()
 // on error.
 func CurrOffset(t T, s io.Seeker) int64 {
+	t.Helper()
 	return Seek(t, s, 0, io.SeekCurrent)
 }
 
@@ -136,6 +139,7 @@ func CurrOffset(t T, s io.Seeker) int64 {
 // Seek returns the new offset relative to the start of the s.
 // Calls t.Fatal() on error.
 func Seek(t T, s io.Seeker, offset int64, whence int) int64 {
+	t.Helper()
 	off, err := s.Seek(offset, whence)
 	if err != nil {
 		t.Fatal(err)
