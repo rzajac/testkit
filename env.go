@@ -17,6 +17,10 @@ func SetEnv(t T, key, value string) {
 			if err := os.Setenv(key, prev); err != nil {
 				t.Error(err)
 			}
+		} else {
+			if err := os.Unsetenv(key); err != nil {
+				t.Error(err)
+			}
 		}
 	})
 }
