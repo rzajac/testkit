@@ -10,7 +10,7 @@ import (
 // on error.
 func ToJSON(t T, v interface{}) []byte {
 	t.Helper()
-	data, err := json.MarshalIndent(v, "  ", "  ")
+	data, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		t.Fatal(err)
 		return nil
