@@ -7,6 +7,7 @@ import (
 // SetEnv sets environment variable key to value and registers cleanup
 // function with t to set the environment variable to what it was.
 func SetEnv(t T, key, value string) {
+	t.Helper()
 	prev, set := os.LookupEnv(key)
 	if err := os.Setenv(key, value); err != nil {
 		t.Fatal(err)
