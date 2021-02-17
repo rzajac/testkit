@@ -28,7 +28,8 @@ type HTTPServer struct {
 	t         T                // Test state manager.
 }
 
-// NewHTTPServer returns new instance of HTTPServer.
+// NewHTTPServer returns new instance of HTTPServer and registers call to Close
+// in test cleanup.
 func NewHTTPServer(t T) *HTTPServer {
 	t.Helper()
 	tst := &HTTPServer{
