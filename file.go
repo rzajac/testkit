@@ -31,6 +31,14 @@ func CreateFile(t T, name string) *os.File {
 	return fil
 }
 
+// RemoveFile removes file or empty directory. Calls t.Fatal on error.
+func RemoveFile(t T, pth string) {
+	t.Helper()
+	if err := os.Remove(pth); err != nil {
+		t.Fatal(err)
+	}
+}
+
 // TempFile is a wrapper around ioutil.TempFile() which calls t.Fatal()
 // on error. It registers cleanup function with t removing the
 // created file.

@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -82,4 +83,20 @@ func Test_Seek(t *testing.T) {
 	got, err := ioutil.ReadAll(fil)
 	require.NoError(t, err)
 	assert.Exactly(t, "1\nline2\nend", string(got))
+}
+
+func Test_RemoveFile(t *testing.T) {
+	// --- Given ---
+	pth := path.Join(t.TempDir(), "test.txt")
+	fil, err := os.Create(pth)
+	assert.NoError(t, err)
+	fil.Close()
+
+	// --- When ---
+	RemoveFile(t, pth)
+
+	// --- Then ---
+	_, err = os.Open(pth)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "no such file or directory")
 }
