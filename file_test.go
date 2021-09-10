@@ -10,8 +10,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/rzajac/testkit/internal"
 )
 
 func Test_ReplaceInFile(t *testing.T) {
@@ -23,7 +21,7 @@ func Test_ReplaceInFile(t *testing.T) {
 	`
 	require.NoError(t, ioutil.WriteFile(pth, []byte(content), 0777))
 
-	mck := &internal.TMock{}
+	mck := &TMock{}
 	mck.On("Helper")
 
 	// --- When ---
@@ -52,7 +50,7 @@ func Test_CurrentOffset(t *testing.T) {
 	_, err = fil.Read(make([]byte, 3))
 	require.NoError(t, err)
 
-	mck := &internal.TMock{}
+	mck := &TMock{}
 	mck.On("Helper")
 
 	// --- When ---
@@ -71,7 +69,7 @@ func Test_Seek(t *testing.T) {
 	fil, err := os.Open(pth)
 	require.NoError(t, err)
 
-	mck := &internal.TMock{}
+	mck := &TMock{}
 	mck.On("Helper")
 
 	// --- When ---
@@ -90,7 +88,7 @@ func Test_RemoveFile(t *testing.T) {
 	pth := path.Join(t.TempDir(), "test.txt")
 	fil, err := os.Create(pth)
 	assert.NoError(t, err)
-	fil.Close()
+	assert.NoError(t, fil.Close())
 
 	// --- When ---
 	RemoveFile(t, pth)

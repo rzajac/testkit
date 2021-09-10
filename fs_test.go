@@ -8,8 +8,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/rzajac/testkit/internal"
 )
 
 func Test_ModTime(t *testing.T) {
@@ -18,7 +16,7 @@ func Test_ModTime(t *testing.T) {
 	_, err := os.Create(pth)
 	require.NoError(t, err)
 
-	mck := &internal.TMock{}
+	mck := &TMock{}
 	mck.On("Helper")
 
 	// --- When ---

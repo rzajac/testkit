@@ -26,6 +26,20 @@ type T interface {
 	// Helper may be called simultaneously from multiple goroutines.
 	Helper()
 
+	// Setenv calls os.Setenv(key, value) and uses Cleanup to
+	// restore the environment variable to its original value
+	// after the test.
+	//
+	// This cannot be used in parallel tests.
+	Setenv(key, value string)
+
 	// Skip is equivalent to Log followed by SkipNow.
 	Skip(args ...interface{})
+
+	// TempDir returns a temporary directory for the test to use.
+	// The directory is automatically removed by Cleanup when the test and
+	// all its subtests complete.
+	// Each subsequent call to t.TempDir returns a unique directory;
+	// if the directory creation fails, TempDir terminates the test by calling Fatal.
+	TempDir() string
 }

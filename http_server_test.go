@@ -11,17 +11,15 @@ import (
 	"github.com/stretchr/testify/require"
 
 	kit "github.com/rzajac/testkit"
-	"github.com/rzajac/testkit/internal"
 )
 
 func Test_HTTPServer_SmokeTest(t *testing.T) {
 	// --- Given ---
-	mck := &internal.TMock{}
+	mck := &kit.TMock{}
 	mck.On("Cleanup", mock.Anything)
 	mck.On("Helper")
 
 	srv := kit.NewHTTPServer(mck).Rsp(http.StatusOK, []byte("response"))
-	defer srv.Close()
 
 	// --- When ---
 	rsp, err := http.Post(srv.URL()+"/?k0=v0", "", bytes.NewReader([]byte("req body")))
