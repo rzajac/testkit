@@ -6,11 +6,10 @@ import (
 	"io"
 )
 
-// ToJSON is a wrapper around json.MarshalIndent() which calls t.Fatal()
-// on error.
+// ToJSON is a wrapper around json.Marshal() which calls t.Fatal() on error.
 func ToJSON(t T, v interface{}) []byte {
 	t.Helper()
-	data, err := json.MarshalIndent(v, "", "  ")
+	data, err := json.Marshal(v)
 	if err != nil {
 		t.Fatal(err)
 		return nil

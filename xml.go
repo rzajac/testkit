@@ -12,11 +12,10 @@ func FromXML(t T, data []byte, v interface{}) {
 	}
 }
 
-// ToXML is a wrapper around xml.MarshalIndent() which calls t.Fatal()
-// on error.
+// ToXML is a wrapper around xml.Marshal() which calls t.Fatal() on error.
 func ToXML(t T, v interface{}) []byte {
 	t.Helper()
-	data, err := xml.MarshalIndent(v, "", "  ")
+	data, err := xml.Marshal(v)
 	if err != nil {
 		t.Fatal(err)
 		return nil
