@@ -40,6 +40,7 @@ func NewHTTPServer(t T) *HTTPServer {
 
 	// Cleanup after the test is done.
 	t.Cleanup(func() {
+		t.Helper()
 		if len(tst.requests) != tst.responseCnt {
 			t.Errorf(
 				"expected %d requests got %d",
