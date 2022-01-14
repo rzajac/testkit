@@ -48,9 +48,11 @@ func NewHTTPServer(t T) *HTTPServer {
 		c.URL.Scheme = tst.scheme
 
 		tst.requests = append(tst.requests, c)
-		if _, err := w.Write(rsp.body); err != nil {
-			t.Fatal(err)
-			return
+		if rsp.body != nil {
+			if _, err := w.Write(rsp.body); err != nil {
+				t.Fatal(err)
+				return
+			}
 		}
 	}
 
@@ -68,9 +70,10 @@ func NewHTTPServer(t T) *HTTPServer {
 
 // Rsp adds response with status and body to the list of responses to return.
 //
-// Every time server receives a request it returns predefined response. The
-// responses are returned in the order they were added. If there is no more
-// responses the t.Fatal() will be called.
+// Every time the server receives a request it returns predefined response. The
+// responses are returned to the order they were added. The rsp can be set to
+// nil in which case no response body will send. The t.Fatal() will be called
+// if there are no more responses.
 func (tst *HTTPServer) Rsp(status int, rsp []byte) *HTTPServer {
 	tst.responses = append(tst.responses, response{
 		status: status,
@@ -83,7 +86,7 @@ func (tst *HTTPServer) Rsp(status int, rsp []byte) *HTTPServer {
 func (tst *HTTPServer) URL() string { return tst.srv.URL }
 
 // Request returns clone of the nth received request. Calls t.Fatal() if n is
-// greater then number or received requests.
+// greater than number or received requests.
 func (tst *HTTPServer) Request(n int) *http.Request {
 	tst.t.Helper()
 	if n >= 0 && n < len(tst.requests) {
@@ -97,7 +100,7 @@ func (tst *HTTPServer) Request(n int) *http.Request {
 func (tst *HTTPServer) ReqCount() int { return len(tst.requests) }
 
 // Values returns URL query values of the nth received request. Calls t.Fatal()
-// if n is greater then number or received requests.
+// if n is greater than number or received requests.
 func (tst *HTTPServer) Values(n int) url.Values {
 	tst.t.Helper()
 	if n >= 0 && n < len(tst.requests) {
@@ -108,7 +111,7 @@ func (tst *HTTPServer) Values(n int) url.Values {
 }
 
 // Body returns body of the nth received request. Calls t.Fatal() if n is
-// greater then number or received requests.
+// greater than number or received requests.
 func (tst *HTTPServer) Body(n int) []byte {
 	tst.t.Helper()
 	if n >= 0 && n < len(tst.requests) {
@@ -130,8 +133,14 @@ func (tst *HTTPServer) Body(n int) []byte {
 	return nil
 }
 
+// BodyString returns body of the nth received request. Calls t.Fatal() if n is
+// greater than number or received requests.
+func (tst *HTTPServer) BodyString(n int) string {
+	return string(tst.Body(n))
+}
+
 // Headers returns headers for given request index. Calls t.Fatal() if n is
-// greater then number or received requests.
+// greater than number or received requests.
 func (tst *HTTPServer) Headers(n int) http.Header {
 	tst.t.Helper()
 	if n >= 0 && n < len(tst.requests) {

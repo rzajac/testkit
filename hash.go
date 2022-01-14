@@ -15,7 +15,7 @@ func MD5File(t T, pth string) string {
 		t.Fatal(err)
 		return ""
 	}
-	defer fil.Close()
+	defer func() { _ = fil.Close() }()
 
 	hash := md5.New()
 	if _, err := io.Copy(hash, fil); err != nil {

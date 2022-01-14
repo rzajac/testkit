@@ -23,7 +23,7 @@ func RandStr(n int) string {
 }
 
 // RandFileName returns random file name. If prefix is empty string it will be
-// set to "file-". If ext is empty string it will be set to ".txt".
+// set to "file-". The extension wll be set to ".txt" if ext is empty string.
 func RandFileName(dir, prefix, ext string) string {
 	if prefix == "" {
 		prefix = "file-"

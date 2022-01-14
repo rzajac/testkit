@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-// CloneHTTPRequest clones HTTP request with body, URL.Host and URL.Scheme.
+// CloneHTTPRequest clones HTTP request and body, URL.Host and URL.Scheme.
 // Calls t.Fatal() on error.
 func CloneHTTPRequest(t T, req *http.Request) *http.Request {
 	t.Helper()

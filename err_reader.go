@@ -14,8 +14,8 @@ type errReader struct {
 }
 
 // ErrReader wraps reader r. The returned  reader reads at most n bytes
-// and returns error err. If err is set to nil ErrTestError will be used.
-// Error other then err will be returned if underlying reader returns an
+// and returns error err. The ErrTestError will be used if err is set to nil.
+// Error other than err will be returned if underlying reader returns an
 // error before n bytes are read.
 func ErrReader(r io.Reader, n int, err error) io.Reader {
 	if err == nil {

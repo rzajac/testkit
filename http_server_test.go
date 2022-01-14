@@ -39,6 +39,29 @@ func Test_HTTPServer_SmokeTest(t *testing.T) {
 	assert.Exactly(t, "req body", string(getRequestBody(t, req)))
 }
 
+func Test_HTTPServer_emptyResponseBody(t *testing.T) {
+	// --- Given ---
+	mck := &kit.TMock{}
+	mck.On("Cleanup", mock.Anything)
+	mck.On("Helper")
+
+	srv := kit.NewHTTPServer(mck).Rsp(http.StatusCreated, nil)
+
+	// --- When ---
+	rsp, err := http.Post(srv.URL()+"/?k0=v0", "", bytes.NewReader([]byte("req body")))
+
+	// --- Then ---
+	mck.AssertExpectations(t)
+	require.NoError(t, err)
+	assert.Exactly(t, http.StatusCreated, rsp.StatusCode)
+	assert.Exactly(t, []byte{}, getResponseBody(t, rsp))
+	assert.Exactly(t, 1, srv.ReqCount())
+
+	req := srv.Request(0)
+	assert.Exactly(t, srv.URL()+"/?k0=v0", req.URL.String())
+	assert.Exactly(t, "req body", string(getRequestBody(t, req)))
+}
+
 // getResponseBody reads response body, closes it and returns as byte slice. Calls
 // t.Fatal() on error.
 func getRequestBody(t *testing.T, r *http.Request) []byte {

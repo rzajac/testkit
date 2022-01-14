@@ -16,7 +16,7 @@ func TempDir(t T, dir string, prefix string) string {
 	return pth
 }
 
-// CreateDir creates directory with name returns passed name so it can be used
+// CreateDir creates directory with name returns passed name, so it can be used
 // in place.
 //
 //     MyFunction(CreateDir(t, "name"))

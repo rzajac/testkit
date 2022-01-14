@@ -4,7 +4,7 @@ import (
 	"io"
 )
 
-// errWriter implements io.Writer interface but allows to write only n
+// errWriter implements io.Writer interface but allows writing only n
 // number of bytes then returns given error.
 type errWriter struct {
 	w   io.Writer // Underlying writer.
@@ -15,7 +15,7 @@ type errWriter struct {
 
 // ErrWriter wraps writer w in a writer which writes at most n bytes and
 // returns error err. If err is set to nil then ErrTestError will be used.
-// Error other then err will be returned if underlying writer returns
+// Error other than err will be returned if underlying writer returns
 // an error before n bytes are written.
 func ErrWriter(w io.Writer, n int, err error) io.Writer {
 	if err == nil {
