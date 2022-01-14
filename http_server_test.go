@@ -62,6 +62,31 @@ func Test_HTTPServer_emptyResponseBody(t *testing.T) {
 	assert.Exactly(t, "req body", string(getRequestBody(t, req)))
 }
 
+func Test_HTTPServer_numberOfExpectedResponsesDoesNotMatchSeenRequests(t *testing.T) {
+	// --- Given ---
+	mck := &kit.TMock{}
+
+	var cleanup func()
+	mck.On("Cleanup", mock.MatchedBy(func(fn func()) bool {
+		cleanup = fn
+		return true
+	}))
+	mck.On("Helper")
+	mck.On("Errorf", "expected %d requests got %d", 2, 1)
+
+	// Expect two requests.
+	srv := kit.NewHTTPServer(mck)
+	srv.Rsp(http.StatusOK, nil)
+	srv.Rsp(http.StatusOK, nil)
+
+	// --- When ---
+	_, err := http.Get(srv.URL())
+
+	// --- Then ---
+	assert.NoError(t, err)
+	cleanup()
+}
+
 // getResponseBody reads response body, closes it and returns as byte slice. Calls
 // t.Fatal() on error.
 func getRequestBody(t *testing.T, r *http.Request) []byte {

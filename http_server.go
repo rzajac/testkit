@@ -20,16 +20,18 @@ type response struct {
 //
 // The server instance provides methods to analyse the received requests.
 type HTTPServer struct {
-	requests  []*http.Request  // Received requests.
-	srv       *httptest.Server // The test server.
-	host      string           // Test server host:port.
-	scheme    string           // Test server scheme.
-	responses []response       // Responses to return.
-	t         T                // Test state manager.
+	requests    []*http.Request  // Received requests.
+	srv         *httptest.Server // The test server.
+	host        string           // Test server host:port.
+	scheme      string           // Test server scheme.
+	responseCnt int              // Number of added responses.
+	responses   []response       // Responses to return.
+	t           T                // Test state manager.
 }
 
 // NewHTTPServer returns new instance of HTTPServer and registers call to Close
-// in test cleanup.
+// in test cleanup. The server will fail the test if during cleanup the number
+// of expected responses does not match the number of seen requests.
 func NewHTTPServer(t T) *HTTPServer {
 	t.Helper()
 	tst := &HTTPServer{
@@ -37,7 +39,16 @@ func NewHTTPServer(t T) *HTTPServer {
 	}
 
 	// Cleanup after the test is done.
-	t.Cleanup(func() { _ = tst.Close() })
+	t.Cleanup(func() {
+		if len(tst.requests) != tst.responseCnt {
+			t.Errorf(
+				"expected %d requests got %d",
+				tst.responseCnt,
+				len(tst.requests),
+			)
+		}
+		_ = tst.Close()
+	})
 
 	// Handler for all incoming requests.
 	handler := func(w http.ResponseWriter, req *http.Request) {
@@ -79,6 +90,7 @@ func (tst *HTTPServer) Rsp(status int, rsp []byte) *HTTPServer {
 		status: status,
 		body:   rsp,
 	})
+	tst.responseCnt = len(tst.responses)
 	return tst
 }
 
