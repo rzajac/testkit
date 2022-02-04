@@ -56,6 +56,14 @@ func (_m *TMock) Log(args ...interface{}) {
 	_m.Called(_ca...)
 }
 
+// Logf provides a mock function with given fields: format, args
+func (_m *TMock) Logf(format string, args ...interface{}) {
+	var _ca []interface{}
+	_ca = append(_ca, format)
+	_ca = append(_ca, args...)
+	_m.Called(_ca...)
+}
+
 // Setenv provides a mock function with given fields: key, value
 func (_m *TMock) Setenv(key string, value string) {
 	_m.Called(key, value)
